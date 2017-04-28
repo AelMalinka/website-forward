@@ -15,7 +15,7 @@ app.use(logger());
 app.use(body());
 app.use(request());
 app.use(async (ctx) => {
-	return await ctx.forward('http://localhost:8083/default.html');
+	return await ctx.forward('http://localhost:8084/default.css');
 });
 
 app.listen(3000);

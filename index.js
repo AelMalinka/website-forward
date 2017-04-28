@@ -4,7 +4,7 @@
 
 'use strict';
 
-const request = require('request-promise-native');
+const request = require('request');
 
 module.exports = function() {
 	return async function(ctx, next) {
@@ -19,6 +19,7 @@ module.exports = function() {
 
 			delete ctx.header.host;
 
+			options.simple = false;
 			options.resolveWithFullResponse = true;
 			options.method = options.method || ctx.method;
 			options.headers = options.headers || ctx.headers;
@@ -36,16 +37,24 @@ module.exports = function() {
 				break;
 			}
 
-			await request(options).then(function(res) {
-				for(const name in res.headers) {
-					ctx.response.set(name, res.headers[name]);
-				}
+			await new Promise(function(resolve, reject) {
+				request(options).on('error', function(err) {
+					console.log(err);
+					return reject(err);
+				}).on('response', function(response) {
+					delete response.headers['content-length'];
+					delete response.headers['transfer-encoding'];
 
-				ctx.body = res.body;
-			}).catch(function(err, res) {
-				if(err.statusCode >= 400) throw err;
+					for(const name in response.headers) {
+						ctx.response.set(name, response.headers[name]);
+					}
 
-				ctx.status = err.statusCode;
+					response.pipe(ctx.res);
+
+					response.on('end', function() {
+						resolve();
+					});
+				});
 			});
 		}
 

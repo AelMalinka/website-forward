@@ -11,12 +11,12 @@
   "author": "Michael Thomas (malinka) <malinka@entropy-development.com>",
   "license": "AGPL-3.0",
   "dependencies": {
-    "request": "^2.81.0",
-    "request-promise-native": "^1.0.3"
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
-    "koa-logger": "^2.0.1"
+    "koa-logger": "^2.0.1",
+    "nodemon": "^1.11.0"
   }
 }
