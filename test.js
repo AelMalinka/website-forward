@@ -15,7 +15,7 @@ app.use(logger());
 app.use(body());
 app.use(request());
 app.use(async (ctx) => {
-	return await ctx.forward('http://google.com/');
+	return await ctx.forward('http://localhost:8083/default.html');
 });
 
 app.listen(3000);

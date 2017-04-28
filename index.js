@@ -17,7 +17,7 @@ module.exports = function() {
 
 			options = options || {};
 
-			delete this.header.host;
+			delete ctx.header.host;
 
 			options.resolveWithFullResponse = true;
 			options.method = options.method || ctx.method;
@@ -36,14 +36,16 @@ module.exports = function() {
 				break;
 			}
 
-			ctx.body = await request(options).then(function(res) {
+			await request(options).then(function(res) {
 				for(const name in res.headers) {
 					ctx.response.set(name, res.headers[name]);
 				}
 
-				return res.body;
-			}).catch(function(err) {
-				throw err;
+				ctx.body = res.body;
+			}).catch(function(err, res) {
+				if(err.statusCode >= 400) throw err;
+
+				ctx.status = err.statusCode;
 			});
 		}
 
