@@ -1,14 +1,14 @@
 {
-  "name": "forward",
+  "name": "koa-forward",
   "version": "0.1.0",
-  "description": "request forwarder",
+  "description": "koa request forwarder",
   "main": "index.js",
   "engines": {
     "node": ">=7.6.0"
   },
   "scripts": {},
   "repository": "AelMalinka/koa-forward",
-  "author": "Michael Thomas <malinka@entropy-development.com>",
+  "author": "Michael Thomas (malinka) <malinka@entropy-development.com>",
   "license": "AGPL-3.0",
   "dependencies": {
     "request": "^2.81.0",
