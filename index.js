@@ -8,7 +8,7 @@ const request = require('request');
 
 module.exports = function() {
 	return async function(ctx, next) {
-		ctx.forward = async function(options) {
+		ctx.forward = function(options) {
 			if(typeof options === 'string') {
 				options = {
 					uri: options
@@ -37,23 +37,22 @@ module.exports = function() {
 				break;
 			}
 
-			await new Promise(function(resolve, reject) {
-				request(options).on('error', function(err) {
-					console.log(err);
-					return reject(err);
-				}).on('response', function(response) {
-					delete response.headers['content-length'];
-					delete response.headers['transfer-encoding'];
-
-					for(const name in response.headers) {
-						ctx.response.set(name, response.headers[name]);
+			// 2017-04-28 AMR TODO: handle compressed data correctly
+			return new Promise(function(resolve, reject) {
+				request(options, function(err, response, body) {
+					if(err) {
+						console.log('error: ' + err);
+						return eject(err);
 					}
 
-					response.pipe(ctx.res);
+					delete response.headers['content-length'];
 
-					response.on('end', function() {
-						resolve();
-					});
+					for(const name in response.headers) {
+						ctx.set(name, response.headers[name]);
+					}
+
+					ctx.body = body;
+					resolve(response);
 				});
 			});
 		}
