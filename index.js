@@ -20,6 +20,7 @@ module.exports = function() {
 			delete ctx.header.host;
 
 			options.simple = false;
+			options.encoding = null;
 			options.resolveWithFullResponse = true;
 			options.method = options.method || ctx.method;
 			options.headers = options.headers || ctx.headers;
@@ -42,10 +43,10 @@ module.exports = function() {
 				request(options, function(err, response, body) {
 					if(err) {
 						console.log('error: ' + err);
-						return eject(err);
+						return reject(err);
+					} else if(response.statusCode == 304) {
+						ctx.status = 304;
 					}
-
-					delete response.headers['content-length'];
 
 					for(const name in response.headers) {
 						ctx.set(name, response.headers[name]);
