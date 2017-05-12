@@ -21,6 +21,7 @@ module.exports = function() {
 
 			options.simple = false;
 			options.encoding = null;
+			options.followRedirect = false;
 			options.resolveWithFullResponse = true;
 			options.method = options.method || ctx.method;
 			options.headers = options.headers || ctx.headers;
