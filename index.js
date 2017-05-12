@@ -44,8 +44,8 @@ module.exports = function() {
 					if(err) {
 						console.log('error: ' + err);
 						return reject(err);
-					} else if(response.statusCode == 304) {
-						ctx.status = 304;
+					} else if(response.statusCode != 400) {
+						ctx.status = response.statusCode;
 					}
 
 					for(const name in response.headers) {
