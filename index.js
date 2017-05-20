@@ -45,7 +45,7 @@ module.exports = function() {
 					if(err) {
 						console.log('error: ' + err);
 						return reject(err);
-					} else if(response.statusCode != 400) {
+					} else if(response.statusCode != 200) {
 						ctx.status = response.statusCode;
 					}
 
