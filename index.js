@@ -27,21 +27,9 @@ module.exports = function() {
 			options.headers = options.headers || ctx.headers;
 			options.qs = options.qs || ctx.query;
 
-			switch(this.is('json', 'urlencoded')) {
-				case 'json':
-					delete options.headers['content-length'];
-
-					options.body = options.body || ctx.request.body;
-					options.json = true;
-				break;
-				case 'urlencoded':
-					options.form = options.form || ctx.request.body;
-				break;
-			}
-
 			// 2017-04-28 AMR TODO: handle compressed data correctly
 			return new Promise(function(resolve, reject) {
-				request(options, function(err, response, body) {
+				const r = request(options, function(err, response, body) {
 					if(err) {
 						console.log('error: ' + err);
 						return reject(err);
@@ -56,6 +44,26 @@ module.exports = function() {
 					ctx.body = body;
 					resolve(response);
 				});
+				if(ctx.request.rawBody !== undefined) {
+					r.write(ctx.request.rawBody);
+				}
+			});
+		}
+
+		if(ctx.request.rawBody === undefined) {
+			ctx.request.rawBody = await new Promise(function(resolve, reject) {
+				var data = '';
+				ctx.req.on('data', function(chunk) {
+					data += chunk;
+				});
+				ctx.req.on('end', function() {
+					resolve(data);
+				});
+				ctx.req.on('error', function(err) {
+					reject(err);
+				});
+			}).then(function(data) {
+				return data;
 			});
 		}
 

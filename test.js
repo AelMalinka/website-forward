@@ -27,7 +27,6 @@ baseapp.use(async (ctx) => {
 	}
 });
 
-forwardapp.use(body());
 forwardapp.use(me());
 forwardapp.use(async (ctx) => {
 	return await ctx.forward('http://localhost:3001/');
